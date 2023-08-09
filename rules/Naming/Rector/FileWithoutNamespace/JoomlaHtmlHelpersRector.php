@@ -59,7 +59,7 @@ final class JoomlaHtmlHelpersRector extends JoomlaLegacyMVCToJ4Rector implements
 	private $visibilityManipulator;
 
 	public function __construct(
-		RemovedAndAddedFilesCollector $removedAndAddedFilesCollector,
+		JoomlaRemovedAndAddedFilesCollector $removedAndAddedFilesCollector,
 		RenamedClassHandlerService    $renamedClassHandlerService,
 		ClassMethodVisibilityGuard    $classMethodVisibilityGuard,
 		VisibilityManipulator         $visibilityManipulator,

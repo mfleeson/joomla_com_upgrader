@@ -4,6 +4,11 @@ Rector rules to easily upgrade Joomla 3 components to Joomla 4 MVC
 
 Copyright (C) 2022  Nicholas K. Dionysopoulos
 
+This is a modification of an amazing project by Nicholas K. Dionysopoulos (https://github.com/nikosdion/) which unfortunately was archved in May 2023.
+
+For the last couple of months I have been tinkering with it to get it working again following major changes in Rector meaning that Nick's code failed to work. If you want to make improvements, have comments please find the repository here (https://github.com/mfleeson/joomla_com_upgrader)
+
+
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation; either version 2 of the License, or
@@ -36,17 +41,11 @@ If you're interested hit me up at [the Contact Me page](https://www.dionysopoulo
 
 ## Requirements
 
-* Rector 0.14
+* Rector 0.17
 * PHP 7.2 or later; 8.1 or later with XDebug _turned off_ recommended for best performance
 * Composer 2.x
 
 Your component project must have the structure described below.
-
-* Your component's backend code must be in a folder named `administrator`, `admin`, `backend` or `administrator/components/com_yourcomponent` (where `com_yourcomponent` is the name of your component).
-
-* Your component's frontend code must be in a folder named `site`, `frontend`, or `components/com_yourcomponent` (where `com_yourcomponent` is the name of your component).
-
-* Your component's media files must be in a folder named `media`, or `media/com_yourcomponent` (where `com_yourcomponent` is the name of your component).
 
 ## What can this tool do for me?
 
@@ -79,114 +78,21 @@ In short, this tool tries to do the 30% of the migration work which would have t
 
 ## How to use
 
-Checkout your component's repository.
+Download this repository to your development platform.
 
-Update your `composer.json` file with the following:
+Delete composer.lock
 
-```json
-{
-  "minimum-stability": "dev",
-  "prefer-stable": true,
-  "repositories": [
-    {
-      "name": "nikosdion/joomla_typehints",
-      "type": "vcs",
-      "url": "https://github.com/nikosdion/joomlatypehints"
-    },
-    {
-      "name": "nikosdion/joomla_com_upgrader",
-      "type": "vcs",
-      "url": "https://github.com/nikosdion/joomla_com_upgrader"
-    }
-  ],
-  "require-dev": {
-    "rector/rector": "^0.14.0",
-    "nikosdion/joomla_typehints": "*",
-    "nikosdion/joomla_com_upgrader": "*",
-    "friendsofphp/php-cs-fixer": "^3.0"
-  }
-}
-```
+Copy your administrator/components/com_yourcomponent3_code into the admin folder/
+
+Copy your components/com_yourcomponent3_code into the site folder.
+
+Copy any modules into the modules folder.
+
 
 Run `composer update --dev` to install the dependencies.
 
-Create a new `rector.php` in your component project's root with the following contents:
+Edit the  `rector.php` 
 
-```php
-<?php
-
-declare(strict_types=1);
-
-use Rector\Config\RectorConfig;
-use Rector\Set\ValueObject\LevelSetList;
-use Rector\Set\ValueObject\SetList;
-use Rector\Naming\Config\JoomlaLegacyPrefixToNamespace;
-use Rector\Naming\Rector\FileWithoutNamespace\JoomlaHelpersToJ4Rector;
-use Rector\Naming\Rector\FileWithoutNamespace\JoomlaLegacyMVCToJ4Rector;
-use Rector\Naming\Rector\FileWithoutNamespace\RenamedClassHandlerService;
-use Rector\Naming\Rector\JoomlaPostRefactoringClassRenameRector;
-use Rector\Naming\Rector\FileWithoutNamespace\JoomlaHtmlHelpersRector;
-use Rector\Naming\Rector\FileWithoutNamespace\JoomlaFormFieldsRector;
-use Rector\Naming\Rector\FileWithoutNamespace\JoomlaFormRulesRector;
-
-return static function (RectorConfig $rectorConfig): void {
-    $rectorConfig->disableParallel();
-
-    $rectorConfig->paths([
-        __DIR__ . '/admin',
-        __DIR__ . '/site',
-        __DIR__ . '/script.php',
-        // Add any more directories or files your project may be using here
-    ]);
-    
-    $rectorConfig->skip([
-        // These are our auto-generated renamed class maps for the second pass 
-        __DIR__ . '_classmap.php',
-        __DIR__ . '_classmap.json',
-    ]);
-    
-    // Required to autowire the custom services used by our Rector rules
-    $services = $rectorConfig
-        ->services()
-        ->defaults()
-        ->autowire()
-        ->autoconfigure();
-
-    // Register our custom services and configure them
-	$services->set(RenamedClassHandlerService::class)
-	         ->arg('$directory', __DIR__);
-
-    // Basic refactorings
-    $rectorConfig->sets([
-        // Auto-refactor code to at least PHP 7.2 (minimum Joomla version)
-        LevelSetList::UP_TO_PHP_72,
-        // Replace legacy class names with the namespaced ones
-        __DIR__ . '/vendor/nikosdion/joomla_typehints/rector/joomla_4_0.php',
-        // Use early returns in if-blocks (code quality)
-        SetList::EARLY_RETURN,
-    ]);
-
-    // Configure the namespace mappings
-    $joomlaNamespaceMaps = [
-        new JoomlaLegacyPrefixToNamespace('Helloworld', 'Acme\HelloWorld', []),
-        new JoomlaLegacyPrefixToNamespace('HelloWorld', 'Acme\HelloWorld', []),
-    ];
-
-    // Auto-refactor the Joomla MVC classes
-    $rectorConfig->ruleWithConfiguration(JoomlaLegacyMVCToJ4Rector::class, $joomlaNamespaceMaps);
-    $rectorConfig->ruleWithConfiguration(JoomlaHelpersToJ4Rector::class, $joomlaNamespaceMaps);
-    $rectorConfig->ruleWithConfiguration(JoomlaHtmlHelpersRector::class, $joomlaNamespaceMaps);
-    $rectorConfig->ruleWithConfiguration(JoomlaFormFieldsRector::class, $joomlaNamespaceMaps);
-    $rectorConfig->ruleWithConfiguration(JoomlaFormRulesRector::class, $joomlaNamespaceMaps);
-    // Dual purpose. 1st pass: collect renamed classes. 2nd pass: apply the renaming to type hints.
-    $rectorConfig->rule(JoomlaPostRefactoringClassRenameRector::class);
-
-    // Replace Fully Qualified Names (FQN) of classes with `use` imports at the top of the file.
-    $rectorConfig->importNames();
-    // Do NOT import short class names such as `DateTime`
-    $rectorConfig->importShortClasses(false);
-};
-```
 
 The lines you need to change are:
 ```php
@@ -216,6 +122,8 @@ Then we can run it for real (**this step modifies the files in your project**):
 ```bash
 php ./vendor/bin/rector --clear-cache
 ```
+
+Once it has completed running you will find src folders in admin and site which contain the updated files and hopefully the correct file structure.
 
 ## How this tool came to be
 

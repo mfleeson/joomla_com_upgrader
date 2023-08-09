@@ -353,6 +353,14 @@ trait JoomlaNamespaceHandlingTrait
 		}
 
 		// Move the file
-		$this->getRemovedAndAddedFilesCollector()->addMovedFile($this->file, $newPath);
+		mkdir(dirname($newPath),0777,true);
+		copy($this->file->getFilePath(),$newPath);
+		$myfile = fopen("logs.txt", "a") or die("Unable to open file!");
+		$txt = "".$this->file->getFilePath().'='.$newPath;
+		fwrite($myfile, "\n". $txt);
+		fclose($myfile);
+		//rename($this->file->getFilePath(),$newPath);
+		//$this->getRemovedAndAddedFilesCollector()->addMovedFile($this->file, $newPath);
+
 	}
 }

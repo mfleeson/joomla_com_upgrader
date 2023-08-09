@@ -1,6 +1,6 @@
 {
-  "name": "nikosdion/joomla_com_upgrader",
-  "description": "Rector rules to upgrade Joomla 3 components",
+  "name": "mfleeson/joomla_com_upgrader",
+  "description": "Rector rules to upgrade Joomla 3 components based on nikosdion/joomla_com_upgrader",
   "prefer-stable": true,
   "minimum-stability": "dev",
   "license": "GPL-2.0-or-later",
@@ -21,7 +21,7 @@
     "webmozart/assert": "^1.11.0"
   },
   "require-dev": {
-    "rector/rector": "^0.14.0",
+    "rector/rector": "^0.17.0",
     "nikosdion/joomla_typehints": "*",
     "phpunit/phpunit": "^9.5.23"
   },

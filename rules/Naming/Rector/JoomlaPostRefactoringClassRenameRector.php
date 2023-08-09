@@ -25,6 +25,7 @@ use Rector\Naming\Rector\FileWithoutNamespace\RenamedClassHandlerService;
 use Rector\Renaming\NodeManipulator\ClassRenamer;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
 use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
+use \PHPStan\Analyser\Scope;
 
 class JoomlaPostRefactoringClassRenameRector extends AbstractRector
 {
@@ -109,7 +110,6 @@ CODE_SAMPLE
 	{
 		$applicationSide = strtolower($this->getApplicationSide());
 		$applicationSide = ($applicationSide === 'administrator') ? 'admin' : $applicationSide;
-
 		$oldToNewClasses = $this->renamedClassHandlerService->getOldToNewMap($applicationSide);
 
 		if ($oldToNewClasses === [])
@@ -119,13 +119,14 @@ CODE_SAMPLE
 
 		if (!$node instanceof Use_)
 		{
-			return $this->classRenamer->renameNode($node, $oldToNewClasses);
+return null;
+			//return $this->classRenamer->renameNode($node, $oldToNewClasses,null);
 		}
 
-		if (!$this->rectorConfigProvider->shouldImportNames())
-		{
-			return null;
-		}
+		//if (!$this->rectorConfigProvider->shouldImportNames())
+		//{
+		////	return null;
+		//}
 
 		return $this->processCleanUpUse($node, $oldToNewClasses);
 	}

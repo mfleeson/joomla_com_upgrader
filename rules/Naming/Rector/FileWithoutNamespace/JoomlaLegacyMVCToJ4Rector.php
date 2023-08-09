@@ -17,7 +17,7 @@ use PhpParser\Node\Name;
 use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\Stmt\Namespace_;
 use PhpParser\Node\Stmt\Property;
-use Rector\Core\Application\FileSystem\RemovedAndAddedFilesCollector;
+use Rector\Naming\Rector\FileWithoutNamespace\JoomlaRemovedAndAddedFilesCollector;
 use Rector\Core\Contract\Rector\ConfigurableRectorInterface;
 use Rector\Core\Exception\ShouldNotHappenException;
 use Rector\Core\PhpParser\Node\CustomNode\FileWithoutNamespace;
@@ -59,7 +59,7 @@ class JoomlaLegacyMVCToJ4Rector extends AbstractRector implements ConfigurableRe
 	 * Rector utility object which collects the filename changes
 	 *
 	 * @since 1.0.0
-	 * @var   RemovedAndAddedFilesCollector
+	 * @var   JoomlaRemovedAndAddedFilesCollector
 	 * @readonly
 	 */
 	protected $removedAndAddedFilesCollector;
@@ -77,12 +77,12 @@ class JoomlaLegacyMVCToJ4Rector extends AbstractRector implements ConfigurableRe
 	 *
 	 * Rector (well, Symfony) automatically pushes the dependencies we ask for through its DI container.
 	 *
-	 * @param   RemovedAndAddedFilesCollector  $removedAndAddedFilesCollector
+	 * @param   JoomlaRemovedAndAddedFilesCollector  $removedAndAddedFilesCollector
 	 *
 	 * @since   1.0.0
 	 */
 	public function __construct(
-		RemovedAndAddedFilesCollector $removedAndAddedFilesCollector,
+		JoomlaRemovedAndAddedFilesCollector $removedAndAddedFilesCollector,
 		RenamedClassHandlerService    $renamedClassHandlerService
 	)
 	{
@@ -117,9 +117,9 @@ class JoomlaLegacyMVCToJ4Rector extends AbstractRector implements ConfigurableRe
 	}
 
 	/**
-	 * @return RemovedAndAddedFilesCollector
+	 * @return JoomlaRemovedAndAddedFilesCollector
 	 */
-	public function getRemovedAndAddedFilesCollector(): RemovedAndAddedFilesCollector
+	public function getRemovedAndAddedFilesCollector(): JoomlaRemovedAndAddedFilesCollector
 	{
 		return $this->removedAndAddedFilesCollector;
 	}
