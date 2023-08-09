@@ -4,7 +4,7 @@ Rector rules to easily upgrade Joomla 3 components to Joomla 4 MVC
 
 Copyright (C) 2022  Nicholas K. Dionysopoulos
 
-This is a modification of an amazing project by Nicholas K. Dionysopoulos (https://github.com/nikosdion/) which unfortunately was archved in May 2023.
+This is a modification of an amazing project by Nicholas K. Dionysopoulos (https://github.com/nikosdion/) which unfortunately was archived in May 2023.
 
 For the last couple of months I have been tinkering with it to get it working again following major changes in Rector meaning that Nick's code failed to work. If you want to make improvements, have comments please find the repository here (https://github.com/mfleeson/joomla_com_upgrader)
 
