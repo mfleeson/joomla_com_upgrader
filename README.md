@@ -97,13 +97,13 @@ Edit the  `rector.php`
 The lines you need to change are:
 ```php
     $joomlaNamespaceMaps = [
-        new JoomlaLegacyPrefixToNamespace('Helloworld', 'Acme\HelloWorld', []),
-        new JoomlaLegacyPrefixToNamespace('HelloWorld', 'Acme\HelloWorld', []),
+        new JoomlaLegacyPrefixToNamespace('Yourcomponent', 'YourIdentifier\YourComponent', []),
+        new JoomlaLegacyPrefixToNamespace('YourComponent', 'YourIdentifier\YourComponent', []),
     ];
 ```
-where `HelloWorld` is the name of your component without the `com_` prefix and `Acme\HelloWorld` is the namespace prefix you want to use for your component. It is recommended to use the convention `CompanyName\ComponentNameWithoutCom` or `CompanyName\Component\ComponentNameWithoutCom` for your namespace prefix.
+where `Yourcomponent` is the name of your component without the `com_` prefix and `YourIdentifier\YourComponent` is the namespace prefix you want to use for your component. It is recommended to use the convention `CompanyName\ComponentNameWithoutCom` or `CompanyName\Component\ComponentNameWithoutCom` for your namespace prefix.
 
-**CAUTION!** Note that I added two lines here with the legacy Joomla 3 namespace being `Helloworld` in one and `HelloWorld` in another. That's because in Joomla 3 the case of the prefix of your component does not matter. `Helloworld`, `HelloWorld` and `HELLOWORLD` would work just fine. The code refactoring rules are, however, case–sensitive. As a result you need to add as many lines as you have different cases in your component.
+**CAUTION!** Note that I added two lines here with the legacy Joomla 3 namespace being `Yourcomponent` in one and `YourComponent` in another. That's because in Joomla 3 the case of the prefix of your component does not matter. `Yourcomponent`, `YourComponent` and `YOURCOMPONENT` would work just fine. The code refactoring rules are, however, case–sensitive. As a result you need to add as many lines as you have different cases in your component.
 
 The third argument, the empty array `[]`, is a list of class names which begin with the old prefix that you do not want to namespace. I can't think of a reason why you want to do that but I can neither claim I can think of any use case. So I added that option _just in case_ you need it.
 
