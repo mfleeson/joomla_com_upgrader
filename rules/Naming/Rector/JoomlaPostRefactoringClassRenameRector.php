@@ -17,9 +17,9 @@ use PhpParser\Node\Stmt\Expression;
 use PhpParser\Node\Stmt\Namespace_;
 use PhpParser\Node\Stmt\Property;
 use PhpParser\Node\Stmt\Use_;
-use Rector\Core\Configuration\RectorConfigProvider;
 use Rector\Core\PhpParser\Node\CustomNode\FileWithoutNamespace;
 use Rector\Core\Rector\AbstractRector;
+use Rector\Config\RectorConfig;
 use Rector\Naming\Rector\FileWithoutNamespace\JoomlaNamespaceHandlingTrait;
 use Rector\Naming\Rector\FileWithoutNamespace\RenamedClassHandlerService;
 use Rector\Renaming\NodeManipulator\ClassRenamer;
@@ -49,11 +49,10 @@ class JoomlaPostRefactoringClassRenameRector extends AbstractRector
 	 */
 	private $renamedClassHandlerService;
 
-	public function __construct(RenamedClassHandlerService $renamedClassHandlerService, ClassRenamer $classRenamer, RectorConfigProvider $rectorConfigProvider)
+	public function __construct(RenamedClassHandlerService $renamedClassHandlerService, ClassRenamer $classRenamer)
 	{
 		$this->renamedClassHandlerService = $renamedClassHandlerService;
 		$this->classRenamer               = $classRenamer;
-		$this->rectorConfigProvider       = $rectorConfigProvider;
 	}
 
 	/**
